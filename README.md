@@ -66,24 +66,23 @@ I quickly realized that my graphic doesn't really help a potential investor afte
 Similar to the First Round of Visualization Feedback, I provided context and questions to be answered. This time, I had one person provide feedback. The question/answers are provided below.
 
 - What do you notice in the visualization?
-    1. All rating trends are showing decreasing estimated returns
-
+    1. The first thing that drew my attention was the vertical lines that look like a barcode. I read the title of the chart and realized what those represented. I think the title needs some work as this shows more than just the mean. I think the axis labels are too small in comparison to the title and legend.
 
 - What questions do you have about the data?
-    1. Why wouldn’t I invest in “HR” Prosper Rating every time? 
-
+    1. How many loans were actually issued? It's hard to tell. Are there actual returns available instead of estimated? Is there a way to split out the data by year? Maybe each year shows something different.
 
 - What relationships do you notice?
-    1. All of the returns show a decreasing trend
+    1. The more risk, the more reward (higher estimated return). 
 
 - What do you think is the main takeaway from this visualization?
-    1. Prosper has 7 different ratings you can choose from
-
+    1. There are seven Prosper Credit rating loans to choose from. E rating returns show the highest estimated returns although individual loans tend to vary.
 
 - Is there something you don’t understand in the graphic?
-	1. As I said before, the graphic is useful to understand the returns for each Prosper Rating over time. I just don't know why I wouldn't invest in	Rating HR (blue line) every time. Also, I noticed I could hover over the points to display a tooltip but found that out by mistake. Maybe indicate that is an option. 
+	1. What's the difference between the loans? I'm assuming there is higher risk of default on the returns with higher estimated returns (as they would garner a higher interest rate). There isn't anything that tells me default risk.
 
 ### Final Iteration Visualization with D3.js – Incorporating Second Round of Feedback
+
+![Revision_2_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_screenshot.png)
 
 
 ### References

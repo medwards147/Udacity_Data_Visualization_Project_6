@@ -81,8 +81,7 @@
   </form>
 
 <script type="text/javascript">
-	//d3.csv("climate4.csv", function(error, data) {
-  //color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));	
+	
 	//setup our ui
     function updateEleven() {
             var new_csv = "data/prosper_clean_2011.csv";
@@ -198,17 +197,16 @@
 				.attr("text-anchor", "middle")  
 				.style("font-size", "20px") 
 				.style("text-decoration", "bold")  
-				.text("Prosper Mean Estimated Return by Prosper Rating, Data Jan 2011 - Mar 2014");
+				.text("Prosper Estimated Returns by Prosper Rating for Loans Issued between January 2011 and March 2014");
 		
-		// title draw
+		// title draw below
 		svg.append("text")
 				.attr("x", (width / 2))             
 				.attr("y", 0 - (margin.top / 1.5))
 				.attr("text-anchor", "middle")  
-				.style("font-size", "16x") 
+				.style("font-size", "16px") 
 				.style("text-decoration", "bold")  
-				.text("Note: each dash represents an individual loan");
-		
+				.text("Note: Each dash represents an individual loan");
 		
 		// legend title draw
 		svg.append("text")
@@ -217,9 +215,8 @@
 				.style("font-size", "16px") 
 				.style("text-decoration", "underline")  
 				.text("Legend");
-		
-		
 
+				
 		// x-axis draw
 		svg.append("g")
 			.attr("class", "x axis")
@@ -235,6 +232,7 @@
 		svg.append("text")
 		  .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom/1.5) + ")")
 		  .style("text-anchor", "middle")
+		  .style("font-size", "16px") 
 		  .text("(<--Less Risk) Prosper Credit Rating (More Risk-->)");
 	  
 		 // y-label
@@ -244,6 +242,7 @@
 			.attr("x",0 - (height / 2))
 			.attr("dy", "1em")
 			.style("text-anchor", "middle")
+			.style("font-size", "16px") 
 			.text("Prosper Estimated Return");
 
 		// all points
@@ -499,7 +498,7 @@
 		pointsnewmean.transition().duration(100)
 				.attr("cx", function(d) { return xScale(d.key); })		 
 				.attr("cy", function(d) { return yScale(d.values.avg_return); })
-				.attr("r", 10)
+				.attr("r", 8)
 				.style("fill", "#ff7f0e");
 				
 		pointsnewmean.exit().transition().duration(100).remove();
@@ -513,7 +512,7 @@
 		pointsnewupper.transition().duration(100)
 				.attr("cx", function(d) { return xScale(d.key); })		 
 				.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
-				.attr("r", 10)
+				.attr("r", 8)
 				.style("fill", "#1f77b4");
 		
 		pointsnewupper.exit().transition().duration(100).remove();
@@ -527,7 +526,7 @@
 		pointsnewlower.transition().duration(100)
 				.attr("cx", function(d) { return xScale(d.key); })		 
 				.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
-				.attr("r", 6)	
+				.attr("r", 8)	
 				.style("fill", "#d62728");
 				
 		pointsnewlower.exit().transition().duration(100).remove()
