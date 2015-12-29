@@ -83,7 +83,7 @@ Similar to the First Round of Visualization Feedback, I provided context and que
 ### Final Iteration Visualization with D3.js – Incorporating Second Round of Feedback
 
 
-![Revision_3_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_screenshot.png)
+![Revision_3_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_rev.png)
 
 
 ### References
