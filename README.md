@@ -41,10 +41,10 @@ I interviewed three people to collect un-biased feedback in order to improve upo
     2. It looks like Skittles "Taste the Rainbow". 
 Note: my wife's feedback is a little more useful after her answer (#2).
 
-
 - What questions do you have about the data?
     1. Why wouldn’t I invest in “HR” Prosper Rating every time? 
     2.  What do the different ratings mean? Why wouldn't I invest in the blue or orange every time?
+
 - What relationships do you notice?
     1. All of the returns show a decreasing trend
     2. All trends are very similar
@@ -57,8 +57,8 @@ Note: my wife's feedback is a little more useful after her answer (#2).
 	2. I understood everything. I'd suggest indicating what each Rating actually means. 
 
 
-#### Final Visualization with D3.js – Incorporating Feedback
-
+#### Next Iteration Visualization with D3.js – Incorporating Feedback
+I quickly realized that my graphic doesn't really help a potential investor after reading the feedback I received. The main issue is that each rating only shows average returns, which of course are higher for the higher risk ratings. That is because given a large enough sample size, estimated average returns should be higher for the higher risk loans by definition (Note: actual returns may be different over a given period). Given the feedback and this realization, I decided to change my approach by creating a graphic that does a better job at showing the variation. The following picture provides my new plot with a Prosper Rating ordinal scale instead of a time series scale. Estimated returns are now shown for each individual loan (represented by the dashes) and summary statitics (5th percentile, 95th percentile, and mean) are shown by the larger circles. This plot (live version) also allows you to view each year inidividually by clicking the appropriately labeled 'radio' button.
 
 
 ### References
