@@ -33,7 +33,7 @@ After exploration, I decided to clean the data by making the following adjustmen
 Leveraging the plot I created in R, I was able to create the first iteration of my plot with d3.js shown below. The code for this plot is provided in `index_rev1.html`. 
 ![Revision_1_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/rev1_timeseries_screenshot.png)
 
-#### Visualization Feedback
+#### First Round of Visualization Feedback
 I interviewed three people to collect un-biased feedback in order to improve upon my visualization.  First, I had to explain about Prosper.com and peer to peer lending in general. Then, I asked them with questions. The following section provides each question with a summary of each response for two people (labeled "i" and "ii" after each question). I received feedback from a third person on in a follow-on version after I updated my chart in response to the initial feedback.
 
 - What do you notice in the visualization?
@@ -48,6 +48,7 @@ Note: my wife's feedback is a little more useful after her answer (#2).
 - What relationships do you notice?
     1. All of the returns show a decreasing trend
     2. All trends are very similar
+	
 - What do you think is the main takeaway from this visualization?
     1. Prosper has 7 different ratings you can choose from
     2. More loans issued overtime with lower estimated returns by month
@@ -57,9 +58,33 @@ Note: my wife's feedback is a little more useful after her answer (#2).
 	2. I understood everything. I'd suggest indicating what each Rating actually means. 
 
 
-#### Next Iteration Visualization with D3.js – Incorporating Feedback
-I quickly realized that my graphic doesn't really help a potential investor after reading the feedback I received. The main issue is that each rating only shows average returns, which of course are higher for the higher risk ratings. That is because given a large enough sample size, estimated average returns should be higher for the higher risk loans by definition (Note: actual returns may be different over a given period). Given the feedback and this realization, I decided to change my approach by creating a graphic that does a better job at showing the variation. The following picture provides my new plot with a Prosper Rating ordinal scale instead of a time series scale. Estimated returns are now shown for each individual loan (represented by the dashes) and summary statitics (5th percentile, 95th percentile, and mean) are shown by the larger circles. This plot (live version) also allows you to view each year inidividually by clicking the appropriately labeled 'radio' button.
+#### Next Iteration Visualization with D3.js – Incorporating First Round of Feedback
+I quickly realized that my graphic doesn't really help a potential investor after reading the feedback I received. The main issue is that each rating only shows average returns, which of course are higher for the higher risk ratings. That is because given a large enough sample size, estimated average returns should be higher for the higher risk loans by definition (Note: actual returns may be different over a given period). Given the feedback and this realization, I decided to change my approach by creating a graphic that does a better job at showing the variation. The following picture provides my new plot with a Prosper Rating ordinal scale instead of a time series scale. Estimated returns are now shown for each individual loan (represented by the dashes) and summary statitics (5th percentile, 95th percentile, and mean) are shown by the larger colored circles. This plot (live version) also allows you to view each year inidividually by clicking the appropriately labeled 'radio' button.
 ![Revision_2_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_screenshot.png)
+
+#### Second Round of Visualization Feedback 
+Similar to the First Round of Visualization Feedback, I provided context and questions to be answered. This time, I had one person provide feedback. The question/answers are provided below.
+
+- What do you notice in the visualization?
+    1. All rating trends are showing decreasing estimated returns
+
+
+- What questions do you have about the data?
+    1. Why wouldn’t I invest in “HR” Prosper Rating every time? 
+
+
+- What relationships do you notice?
+    1. All of the returns show a decreasing trend
+
+- What do you think is the main takeaway from this visualization?
+    1. Prosper has 7 different ratings you can choose from
+
+
+- Is there something you don’t understand in the graphic?
+	1. As I said before, the graphic is useful to understand the returns for each Prosper Rating over time. I just don't know why I wouldn't invest in	Rating HR (blue line) every time. Also, I noticed I could hover over the points to display a tooltip but found that out by mistake. Maybe indicate that is an option. 
+
+### Final Iteration Visualization with D3.js – Incorporating Second Round of Feedback
+
 
 ### References
 1.	http://alignedleft.com/tutorials/d3
