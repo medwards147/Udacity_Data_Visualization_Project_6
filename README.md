@@ -59,7 +59,7 @@ Note: my wife's feedback is a little more useful after her answer (#2).
 
 #### Next Iteration Visualization with D3.js – Incorporating Feedback
 I quickly realized that my graphic doesn't really help a potential investor after reading the feedback I received. The main issue is that each rating only shows average returns, which of course are higher for the higher risk ratings. That is because given a large enough sample size, estimated average returns should be higher for the higher risk loans by definition (Note: actual returns may be different over a given period). Given the feedback and this realization, I decided to change my approach by creating a graphic that does a better job at showing the variation. The following picture provides my new plot with a Prosper Rating ordinal scale instead of a time series scale. Estimated returns are now shown for each individual loan (represented by the dashes) and summary statitics (5th percentile, 95th percentile, and mean) are shown by the larger circles. This plot (live version) also allows you to view each year inidividually by clicking the appropriately labeled 'radio' button.
-
+![Revision_2_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_screenshot.png)
 
 ### References
 1.	http://alignedleft.com/tutorials/d3
