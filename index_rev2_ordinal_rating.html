@@ -54,7 +54,7 @@
 <script type="text/javascript">
 	
 	// setup for svg
-	var margin = {top: 150, right: 130, bottom: 50, left: 60};
+	var margin = {top: 100, right: 130, bottom: 50, left: 60};
 	var	width = 1300 - margin.left - margin.right;
 	var	height = 950 - margin.top - margin.bottom;
 	//var rating_order = ["HR", "E", "D", "C", "B", "A", "AA"];
@@ -149,11 +149,11 @@
 		// title draw
 		svg.append("text")
 				.attr("x", (width / 2))             
-				.attr("y", 0 - (margin.top / 1.5))
+				.attr("y", 0 - (margin.top / 1.6))
 				.attr("text-anchor", "middle")  
-				.style("font-size", "16x") 
+				.style("font-size", "16px") 
 				.style("text-decoration", "bold")  
-				.text("Note: each dash represents an individual loan");
+				.text("Note: Each dash represents an individual loan");
 		
 		
 		// legend title draw
@@ -164,8 +164,6 @@
 				.style("text-decoration", "underline")  
 				.text("Legend");
 		
-		
-
 		// x-axis draw
 		svg.append("g")
 			.attr("class", "x axis")
@@ -181,7 +179,7 @@
 		svg.append("text")
 		  .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom/1.5) + ")")
 		  .style("text-anchor", "middle")
-		  .text("(<--Less Risk) Prosper Credit Rating (More Risk-->)");
+		  .text("Prosper Credit Rating");
 	  
 		 // y-label
 		svg.append("text")
