@@ -14,8 +14,10 @@ Files:
 
 ### Project Summary
 This data visualization provides [Prosper.com loan data](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&usg=AFQjCNGy13Kf5et82IoAUpLX68qW61M8DA) estimated returns by Prosper Credit Rating by month between 2011 and 2014. The programming language R was used to clean and explore the raw data file. A cleaned version of this file was used to generate the visualization using the d3.js library.
+
 ### Visualization Design and Feedback
 I approached the development this visualization from the perspective of a potential investor by thinking about what one would be interested in understanding prior investing in a prosper loan.  I believe the first thing an investor would look for is past performance. However, this data did not include actual past performance so I decided to plot estimated returns on the notion that they are a good indicator of past actual performance. By doing this, I am making the assumption Prosper’s algorithm or methodology to calculate their interest rates (the main variable used to derive estimated return) incorporates past performance. For the sake of this project, I believe this is a safe assumption.
+
 #### Explore the Data
 Prior to developing the visualization, I loaded the data into R to perform exploratory analysis. The dataset consisted of xxxxx rows and xxxxx  columns. I was able to quickly eliminate a lot of the columns as most of the data would not be available to a prospective investor prior to making an investment. I narrowed down the data down to the following variables:
 - `ProsperRating(Alpha)`
@@ -26,9 +28,11 @@ I decided a line chart would be most appropriate to display time-series data and
 ![R_plot](githublink_to_picture_file)
 After exploration, I decided to clean the data by making the following adjustments:
 - Remove any data prior to 2011. Prosper adjusted their method for estimated return calculations starting in 2011. I was unable to normalize 2009 to 2011 as I don't know exactly what they changed. Therefore the chart will show 2011 through March 2014. 
+
 #### Create Visualization with D3.js
 Leveraging the plot I created in R, I was able to create the first iteration of my plot with d3.js shown below. The code for this plot is provided in `index_rev1.html`. 
 ![Revision_1_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/rev1_timeseries_screenshot.png)
+
 #### Visualization Feedback
 I interviewed three people to collect un-biased feedback in order to improve upon my visualization.  First, I had to explain about Prosper.com and peer to peer lending in general. Then, I asked them with questions. The following section provides each question with a summary of each response.
 - What do you notice in the visualization?
