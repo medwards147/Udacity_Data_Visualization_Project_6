@@ -1,16 +1,6 @@
 ##Data Visualization: Prosper Loan Data
 Author: Max Edwards
-Files:
-- `index_rev1.html`
--` index_rev2.html`
-- `index_final.html`
-- `index_rev1.jpg`
-- `index_rev2.jpg`
-- `index_final.jpg`
-- `prosper_clean.csv`
-- `prosper_data-dictionary.txt`
-- `clean_prosper.R`
-- `explore_prosper.R`
+- Incorporate risk in final chart (estimated loss or default) somehow
 
 ### Project Summary
 This data visualization provides [Prosper.com loan data](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&usg=AFQjCNGy13Kf5et82IoAUpLX68qW61M8DA) estimated returns by Prosper Credit Rating by month between 2011 and 2014. The programming language R was used to clean and explore the raw data file. A cleaned version of this file was used to generate the visualization using the d3.js library.
@@ -78,7 +68,7 @@ Similar to the First Round of Visualization Feedback, I provided context and que
     1. There are seven Prosper Credit rating loans to choose from. E rating returns show the highest estimated returns although individual loans tend to vary.
 
 - Is there something you don’t understand in the graphic?
-	1. What's the difference between the loans? I'm assuming there is higher risk of default on the returns with higher estimated returns (as they would garner a higher interest rate). There isn't anything that tells me default risk.
+	1. What's the difference between the loans? I'm assuming there is higher risk of default on the loans with higher estimated returns (as they would garner a higher interest rate). There isn't anything that tells me default risk.
 
 ### Final Iteration Visualization with D3.js – Incorporating Second Round of Feedback
 
