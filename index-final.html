@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="utf-8">
+		<title>Prosper Estimated Returns, 2011-2014</title>
+      <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<style type="text/css">
+	
+	body { font: 12px Sans-Serif;}
+	
+	form {
+		  position: relative;
+		  left: 350px;
+		  top: 80px;
+	}
+
+	path { 
+		stroke-width: 1;
+		fill: none;
+	}
+	
+	.line { 
+		stroke-width: 1;
+		stroke-dasharray: 2,2;
+		fill: none;
+	}
+
+	.axis path,
+	.axis line {
+		fill: none;
+		stroke: grey;
+		stroke-width: 2.5;
+		shape-rendering: crispEdges;
+	}
+	
+	.stats-points {
+		fill: none;
+		stroke: black;
+		stroke-width: 1;
+		opacity: 0.6;
+	}
+
+    .legend text {	
+		font-size: 13px;
+		font-weight: bold;
+		text-anchor: start;
+	}
+ 
+</style>
+ 
+</head>
+<body>
+  <form>
+		<label>Click Radio Button to Show Specified Year(s): </label>
+		<input id = "2011" name="updateButton" 
+           type="radio" 
+           value="2011" 
+           onclick="updateEleven()" />
+		<label for="2011">2011</label>
+		<input id = "2012" name="updateButton" 
+           type="radio" 
+           value="2012" 
+           onclick="updateTwelve()" />
+		<label for="2012">2012</label>
+		<input id = "2013" name="updateButton" 
+           type="radio" 
+           value="2013" 
+           onclick="updateThirteen()" />
+		<label for="2013">2013</label>
+		<input id = "2014" name="updateButton" 
+           type="radio" 
+           value="2014" 
+           onclick="updateFourteen()" />
+		<label for="2014">2014</label>
+		<input id = "All" name="updateButton" 
+           type="radio" 
+           value="All Years" 
+           onclick="updateAllYears()"
+			checked = "checked" />
+		<label for="All">All Years</label>
+  </form>
+
+<script type="text/javascript">
+	//d3.csv("climate4.csv", function(error, data) {
+  //color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));	
+	//setup our ui
+    function updateEleven() {
+            var new_csv = "data/prosper_clean_2011.csv";
+			updateData(new_csv);
+        };   
+    function updateTwelve() {
+            var new_csv = "data/prosper_clean_2012.csv";
+			updateData(new_csv);
+        };  
+    function updateThirteen() {
+            var new_csv = "data/prosper_clean_2013.csv";
+			updateData(new_csv);
+        };
+    function updateFourteen() {
+            var new_csv = "data/prosper_clean_2014.csv";
+			updateData(new_csv);
+        };
+    function updateAllYears() {
+            var new_csv = "data/prosper_clean_small.csv";
+			updateData(new_csv);
+        };
+	
+	// setup for svg
+	var margin = {top: 150, right: 130, bottom: 50, left: 60};
+	var	width = 1300 - margin.left - margin.right;
+	var	height = 950 - margin.top - margin.bottom;
+	//var rating_order = ["HR", "E", "D", "C", "B", "A", "AA"];
+	var rating_order = ["AA", "A", "B", "C", "D", "E", "HR"];
+	// svg
+	var svg = d3.select("body")
+					.append("svg")
+					.attr("width", width + margin.left + margin.right)
+					.attr("height", height + margin.top + margin.bottom)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	// Sorting by date function
+	function sortByDateAscending(a, b) {
+		// Dates will be cast to numbers automatically:
+		return a.date - b.date;
+	};	
+		
+	var parseDate = d3.time.format("%Y-%m-%d").parse;
+	var monthYearNameFormat = d3.time.format("%m-%Y")
+	var parseDate2 = d3.time.format("%m-%Y").parse;
+
+	d3.csv('data/prosper_clean_small.csv', function(error, data) {  // NEW
+		data.forEach(function(d) {                    // NEW
+			d.rating = d.rating;
+			d.return = +d.est_return;
+			d.date = parseDate2(monthYearNameFormat(parseDate(d.loan_date)));                            // NEW
+		});     
+  
+		//data.sort(sortByDateAscending);
+		var dataNest = d3.nest()
+			//.key(function(d) {return d.date;})
+			.key(function(d) { return d.rating; }).sortKeys(function(a,b) { return rating_order.indexOf(a) - rating_order.indexOf(b); })
+			.rollup(function(leaves) { 
+				return {
+					"avg_return" : d3.mean(leaves, function(d) {return d.est_return; }),
+					"5th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.05),
+					"95th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.95),
+					"sample_size": leaves.length,
+					"avg_loss" : d3.mean(leaves, function(d) {return d.loss; }) 
+					}
+			})
+			.entries(data);
+		
+		var	min_value = d3.min(data, function(d) { return d.return; });
+		var	max_value = d3.max(data, function(d) { return d.return; });	
+		
+		var xScale = d3.scale.ordinal()
+				.rangeRoundBands([0, width], 1)
+				.domain(rating_order);
+	
+		var yScale = d3.scale.linear()
+					.range([height, 0])
+					.domain([0, max_value]);
+		
+		// x axis
+		var xAxis = d3.svg.axis()
+						  .scale(xScale)
+						  .orient("bottom")
+
+		// y axis
+		var yAxis = d3.svg.axis()
+						  .scale(yScale)
+						  .orient("left")
+						  .tickFormat(d3.format("%"));
+		// line definition
+		var meanline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values.avg_return); });	
+		
+		var topline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values['95th-percentile']); });
+		
+		var bottomline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values['5th-percentile']); });	
+		
+		var color = d3.scale.ordinal()
+						  //.range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2"])
+						  .range(["#1f77b4", "#ff7f0e", "#d62728"])
+						  //.domain(d3.values(dataNest).map(function(d) { return d.key; }));
+						  .domain(["95th Percentile", "Average", "5th Percentile"]);
+		
+		// title draw
+		svg.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 0 - (margin.top / 1.20))
+				.attr("text-anchor", "middle")  
+				.style("font-size", "20px") 
+				.style("text-decoration", "bold")  
+				.text("Prosper Mean Estimated Return by Prosper Rating, Data Jan 2011 - Mar 2014");
+		
+		// title draw
+		svg.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 0 - (margin.top / 1.5))
+				.attr("text-anchor", "middle")  
+				.style("font-size", "16x") 
+				.style("text-decoration", "bold")  
+				.text("Note: each dash represents an individual loan");
+		
+		
+		// legend title draw
+		svg.append("text")
+				.attr("x", (width+28))             
+				.attr("y", -margin.top/4)
+				.style("font-size", "16px") 
+				.style("text-decoration", "underline")  
+				.text("Legend");
+		
+		
+
+		// x-axis draw
+		svg.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis)
+		  
+		// y-axis draw
+		svg.append("g")
+			.attr("class", "y axis")
+			.call(yAxis);
+		
+		// x-label
+		svg.append("text")
+		  .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom/1.5) + ")")
+		  .style("text-anchor", "middle")
+		  .text("(<--Less Risk) Prosper Credit Rating (More Risk-->)");
+	  
+		 // y-label
+		svg.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 0 - margin.left)
+			.attr("x",0 - (height / 2))
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.text("Prosper Estimated Return");
+
+		// all points
+		var circles = svg.append("g")
+						 .attr("class", "all-circles")
+						 .selectAll("ellipse")
+						 .data(data)
+		
+		circles
+			.enter().append('ellipse');
+			
+		circles
+			.attr("id", "main-circles")
+			.attr("cx", function(d) { return xScale(d.rating); })
+			.attr("cy", function(d) { return yScale(d.return); })
+			.attr("rx", 5)
+			.attr("ry", .2)
+			.style("fill", "grey")
+			.style("fill-opacity", 0.4);
+			
+		
+		var statline = svg.selectAll(".stat")
+					.data(dataNest)
+					.enter()
+					.append("g")
+					.attr("class", "stat");
+		
+		// add line for mean
+		statline.append("path")
+				  .attr("class", "line")
+				  .attr("id", "mean")
+				  .attr("d", meanline(dataNest))
+				  .style("stroke", "#ff7f0e");
+				  //.style("stroke", function(d) { return color(d.key); })			
+				// add line for mean
+		
+		// add line for 95th percentile
+		statline.append("path")
+				  .attr("class", "line")
+				  .attr("id", "top")
+				  .attr("d", topline(dataNest))
+				  .style("stroke", "#1f77b4");	
+			
+		
+		// add line for 5th percentile
+		statline.append("path")
+				  .attr("class", "line")
+				  .attr("id", "bottom")
+				  .attr("d", bottomline(dataNest))
+				  .style("stroke", "#d62728");
+		
+		// add points on the lines
+		var points = svg.append("g")
+						 .attr("class", "stats-points")
+						 .selectAll("circle")
+						 .data(dataNest)
+						 .enter();
+		// points for mean
+		points.append("circle")
+				.attr("id", "average")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values.avg_return); })
+				.attr("r", 8)
+				.style("fill", "#ff7f0e");
+
+		
+		// points for 95th percentile
+		points.append("circle")
+				.attr("id", "upper-percentile")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
+				.attr("r", 8)
+				.style("fill", "#1f77b4");
+		
+		// points for 5th percentile
+		points.append("circle")
+				.attr("id", "lower-percentile")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
+				.attr("r", 8)	
+				.style("fill", "#d62728");
+		
+		// legend
+		var legendRectSize = 25;
+		var legendSpacing = 7;
+		
+		var legend = svg.selectAll(".legend")
+		   .data(color.domain())
+		   .enter()
+		   .append("g")
+		   .attr("class", "legend")
+		   .attr('transform', function(d, i) {
+				var heightY = legendRectSize + legendSpacing;
+				var offset =  heightY/4;
+				var horz = width;
+				var vert = i * heightY - offset;
+				return 'translate(' + horz + ',' + vert + ')';
+			});
+		
+		legend.append('rect')
+		  .attr('width', legendRectSize)
+		  .attr('height', legendRectSize)
+		  .attr("id",function(d) { return d; })
+		  .style('fill', color)
+		  .style('stroke', color);
+		
+		legend.append('text')
+		  .attr('x', legendRectSize*1 + legendSpacing)
+		  .attr('y', legendRectSize - legendSpacing)
+		  .style('fill', color)
+		  .text(function(d) { return d; });
+		 
+		 
+
+	});
+	
+	function updateData(new_csv) {
+			d3.csv(new_csv, function(d) {
+					d.rating = d.rating;
+					d.return = +d.est_return;
+					d.date = parseDate2(monthYearNameFormat(parseDate(d.loan_date)));
+					return d;
+				}, newNest);
+		};
+	
+	function newNest(data) {
+		var data = data;
+		
+		var dataNest = d3.nest()
+				//.key(function(d) {return d.date;})
+				.key(function(d) { return d.rating; }).sortKeys(function(a,b) { return rating_order.indexOf(a) - rating_order.indexOf(b); })
+				.rollup(function(leaves) { 
+					return {
+						"avg_return" : d3.mean(leaves, function(d) {return d.est_return; }),
+						"5th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.05),
+						"95th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.95),
+						"sample_size": leaves.length,
+						"avg_loss" : d3.mean(leaves, function(d) {return d.loss; }) 
+						}
+				})
+				.entries(data);
+		updateChart(data, dataNest);		
+	};
+	
+	function updateChart(data, dataNest) {
+		
+		var	min_value = d3.min(data, function(d) { return d.return; });
+		var	max_value = d3.max(data, function(d) { return d.return; });	
+		
+		var xScale = d3.scale.ordinal()
+				.rangeRoundBands([0, width], 1)
+				.domain(rating_order);
+	
+		var yScale = d3.scale.linear()
+					.range([height, 0])
+					.domain([0, max_value]);
+		
+		var color = d3.scale.ordinal()
+						  .range(["#1f77b4", "#ff7f0e", "#d62728"])
+						  .domain(["95th Percentile", "Average", "5th Percentile"]);
+		
+		// circles updates
+		var circle_array = svg.selectAll("#main-circles")
+					.data(data);
+		
+		circle_array
+				.transition()
+				.duration(100)					
+				.attr("cx", function(d) { return xScale(d.rating); })
+				.attr("cy", function(d) { return yScale(d.return); })
+				.attr("rx", 5)
+				.attr("ry", .2)
+				.style("fill", "grey")
+				.style("fill-opacity", 0.4);
+		
+		circle_array.enter()
+			.append('ellipse')
+			.attr("id", "main-circles")
+			.attr("cx", function(d) { return xScale(d.rating); })
+			.attr("cy", function(d) { return yScale(d.return); })
+			.attr("rx", 5)
+			.attr("ry", .2)
+			
+			.style("fill", "grey")
+			.style("fill-opacity", 0.4);
+		
+		circle_array.exit().attr("class", "exit").transition().duration(50).remove();
+		
+		// line updates
+		var meanline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values.avg_return); });	
+		
+		var topline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values['95th-percentile']); });
+		
+		var bottomline = d3.svg.line()
+			.x(function(d) { return xScale(d.key); })
+			.y(function(d) { return yScale(d.values['5th-percentile']); });	
+
+		
+		var statlinemean = svg.selectAll("#mean")
+						.data(dataNest);
+						
+		statlinemean.enter()
+					.append("g")
+					.attr("class", "stat")
+					.append("path")
+					.attr("d", meanline(dataNest));
+				  
+		statlinemean.transition().duration(100)
+					.attr("d", meanline(dataNest));
+				  
+		statlinemean.exit().transition().duration(100).style("stroke", "").remove()
+		
+		var statlinetop = svg.selectAll("#top")
+						.data(dataNest);
+						
+		statlinetop.enter()
+						.append("g")
+						.attr("class", "stat")
+						.append("path")
+						.attr("d", topline(dataNest));
+		
+		statlinetop.transition().duration(100)
+						.attr("d", topline(dataNest));
+				  
+		statlinetop.exit().transition().duration(100).style("stroke", "").remove()
+	
+		var statlinebottom = svg.selectAll("#bottom")
+								.data(dataNest);
+						
+		statlinebottom.enter()
+						.append("g")
+						.attr("class", "stat")
+						.append("path").append("path")
+						.attr("d", bottomline(dataNest));
+		
+		statlinebottom.transition().duration(100)
+						.attr("d", bottomline(dataNest));
+				  
+		statlinebottom.exit().transition().duration(100).style("stroke", "").remove();
+
+		// points for lines
+		var pointsnewmean = svg.selectAll("#average")
+								.data(dataNest);
+		
+		pointsnewmean.enter().append("circle")	
+				.attr("class", "stats-points")
+
+			
+		pointsnewmean.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values.avg_return); })
+				.attr("r", 10)
+				.style("fill", "#ff7f0e");
+				
+		pointsnewmean.exit().transition().duration(100).remove();
+		
+		var pointsnewupper = svg.selectAll("#upper-percentile")
+						.data(dataNest)
+						
+		pointsnewupper.enter().append("circle")	
+				.attr("class", "stats-points")
+			
+		pointsnewupper.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
+				.attr("r", 10)
+				.style("fill", "#1f77b4");
+		
+		pointsnewupper.exit().transition().duration(100).remove();
+		
+		var pointsnewlower = svg.selectAll("#lower-percentile")
+						.data(dataNest);
+						
+		pointsnewlower.enter().append("circle")	
+				.attr("class", "stats-points");
+
+		pointsnewlower.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
+				.attr("r", 6)	
+				.style("fill", "#d62728");
+				
+		pointsnewlower.exit().transition().duration(100).remove()
+		
+	};
+// http://www.d3noob.org/2014/07/d3js-multi-line-graph-with-automatic.html           
+// http://zeroviscosity.com/d3-js-step-by-step/step-3-adding-a-legend
+</script>
+  </body>
+</html>
