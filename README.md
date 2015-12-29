@@ -35,30 +35,27 @@ Leveraging the plot I created in R, I was able to create the first iteration of 
 
 #### Visualization Feedback
 I interviewed three people to collect un-biased feedback in order to improve upon my visualization.  First, I had to explain about Prosper.com and peer to peer lending in general. Then, I asked them with questions. The following section provides each question with a summary of each response.
+
 - What do you notice in the visualization?
-1. All rating trends are showing decreasing estimated returns
-2. My wife said it looks like Skittles "Taste the Rainbow".
-3.
+    1. All rating trends are showing decreasing estimated returns
+    2. It looks like Skittles "Taste the Rainbow". 
+Note: my wife's feedback is a little more useful after her answer (#2).
+
 
 - What questions do you have about the data?
-1. Why wouldn’t I invest in “HR” Prosper Rating every time? 
-2.  What do the different ratings mean? Why wouldn't I invest in the blue or orange everytime?
-3.
-
+    1. Why wouldn’t I invest in “HR” Prosper Rating every time? 
+    2.  What do the different ratings mean? Why wouldn't I invest in the blue or orange every time?
 - What relationships do you notice?
-1. All of the returns show a decreasing trend
-2. All trends are very similar
-3.
-
+    1. All of the returns show a decreasing trend
+    2. All trends are very similar
 - What do you think is the main takeaway from this visualization?
-1. Prosper has 7 different ratings you can choose from
-2. More loans issued overtime with lower estimated returns by month
-3.
+    1. Prosper has 7 different ratings you can choose from
+    2. More loans issued overtime with lower estimated returns by month
 
 - Is there something you don’t understand in the graphic?
-1.
-2. No
-3.
+	1. As I said before, the graphic is useful to understand the returns for each Prosper Rating over time. I just don't know why I wouldn't invest in	Rating HR (blue line) every time. Also, I noticed I could hover over the points to display a tooltip but found that out by mistake. Maybe indicate that is an option. 
+	2. I understood everything. I'd suggest indicating what each Rating actually means. 
+
 
 #### Final Visualization with D3.js – Incorporating Feedback
 
