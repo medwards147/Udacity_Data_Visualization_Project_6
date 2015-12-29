@@ -28,7 +28,7 @@ After exploration, I decided to clean the data by making the following adjustmen
 - Remove any data prior to 2011. Prosper adjusted their method for estimated return calculations starting in 2011. I was unable to normalize 2009 to 2011 as I don't know exactly what they changed. Therefore the chart will show 2011 through March 2014. 
 #### Create Visualization with D3.js
 Leveraging the plot I created in R, I was able to create the first iteration of my plot with d3.js shown below. The code for this plot is provided in `index_rev1.html`. 
-![Revision_1_plot](githublink)
+![Revision_1_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/rev1_timeseries_screenshot.png)
 #### Visualization Feedback
 I interviewed three people to collect un-biased feedback in order to improve upon my visualization.  First, I had to explain about Prosper.com and peer to peer lending in general. Then, I asked them with questions. The following section provides each question with a summary of each response.
 - What do you notice in the visualization?
