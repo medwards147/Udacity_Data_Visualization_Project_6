@@ -14,10 +14,11 @@ Prior to developing the visualization, I loaded the data into R to perform explo
 - `EstimatedLoss`
 - `LoanOriginationDate`
 I decided a line chart would be most appropriate to display time-series data and decided to distinguish Prosper’s Rating for the loan by the line color. Below is an example of the one of the exploration charts I made with R's ggplot2 package.
-![R_plot](githublink_to_picture_file)
+![R_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/prosper_returns_losses_facet.png)
 
 After exploration, I decided to clean the data by making the following adjustments:
 - Remove any data prior to 2011. I investigated why 2009 and 2010 looked slightly different in terms of their estimated returns. It turns out Prosper adjusted their method for estimated return calculations starting in 2011. I was unable to normalize 2009 to 2011 as I don't know exactly what they changed. Therefore the chart will show 2011 through March 2014. 
+- Change `LoanOriginationDate` into a `year`.
 
 #### Create Visualization with D3.js
 Leveraging the plot I created in R, I was able to create the first iteration of my plot with d3.js shown below. The code for this plot is provided in `index_rev1.html`. 
