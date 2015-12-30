@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prosper Estimated Returns, 2011-2014</title>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<style type="text/css">
+	
+	body { font: 14px Sans-Serif;}
+	
+	form {
+		  position: relative;
+		  left: 14px;
+		  top: 80px;
+	}
+
+	path { 
+		stroke-width: 1;
+		fill: none;
+	}
+	
+	.line { 
+		stroke-width: 1;
+		stroke-dasharray: 2,2;
+		fill: none;
+	}
+
+	.axis path,
+	.axis line {
+		fill: none;
+		stroke: grey;
+		stroke-width: 2.5;
+		shape-rendering: crispEdges;
+	}
+	
+	.stats-points {
+		fill: none;
+		stroke: black;
+		stroke-width: 1;
+		opacity: 0.6;
+	}
+
+    .legend text {	
+		font-size: 13px;
+		font-weight: bold;
+		text-anchor: start;
+	}
+ 
+</style>
+ 
+</head>
+<body>
+  
+<form>
+		<label>Click Radio Button to Show Year Ranges: </label>
+		<input id = "2011" name="updateButton" 
+           type="radio" 
+           value="2011" 
+           onclick="updateEleven()" />
+		<label for="2011">2011-2014 (last 4 years)</label>
+		<input id = "2012" name="updateButton" 
+           type="radio" 
+           value="2012" 
+           onclick="updateTwelve()" />
+		<label for="2012">2012-2014 (last 3 years)</label>
+		<input id = "2013" name="updateButton" 
+           type="radio" 
+           value="2013" 
+           onclick="updateThirteen()" />
+		<label for="2013">2013-2014 (last 2 years)</label>
+		<input id = "2014" name="updateButton" 
+           type="radio" 
+           value="2014" 
+           onclick="updateFourteen()" />
+		<label for="2014">2014 (current year)</label>
+
+  </form>
+
+<script type="text/javascript">
+    
+    var years = ["2011", "2012", "2013", "2014"]
+     	
+    //setup click functions
+    function updateEleven() {
+          draw(years[0])
+        };   
+    function updateTwelve() {
+          draw(years[1])
+        };  
+    function updateThirteen() {
+          draw(years[2])
+        };
+    function updateFourteen() {
+          draw(years[3])
+        };
+
+	// setup for svg
+	var margin = {top: 150, right: 130, bottom: 50, left: 60},
+	    width = 1200 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+  
+	var rating_order = ["AA", "A", "B", "C", "D", "E", "HR"];
+	
+  // svg
+	var svg = d3.select("body")
+					.append("svg")
+					.attr("width", width + margin.left + margin.right)
+					.attr("height", height + margin.top + margin.bottom)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    
+    var xScale = d3.scale.ordinal()
+						  .rangeRoundBands([0, width], 1)
+						  .domain(rating_order);
+   
+    var yScale = d3.scale.linear()
+					      .range([height, 0])
+    
+    		
+	// x axis
+	var xAxis = d3.svg.axis()
+					  .scale(xScale)
+                      .orient("bottom")
+    
+
+	// y axis
+	var yAxis = d3.svg.axis()
+                      .scale(yScale)
+                      .orient("left")
+                      .tickFormat(d3.format("%"));
+  
+    // x-axis draw
+	svg.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis)
+		  
+	// y-axis draw
+	svg.append("g")
+			.attr("class", "y axis")
+			.call(yAxis);
+		
+	// x-label
+	svg.append("text")
+		  .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom/1.5) + ")")
+		  .style("text-anchor", "middle")
+		  .style("font-size", "16px") 
+		  .text("(<--Less Risk) Prosper Credit Rating (More Risk-->)");
+	  
+	// y-label
+	svg.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 0 - margin.left)
+			.attr("x",0 - (height / 2))
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.style("font-size", "16px") 
+			.text("Prosper Estimated Return");
+  
+  	var color = d3.scale.ordinal()
+						.range(["#1f77b4", "#ff7f0e", "#d62728"])
+						.domain(["95th Percentile", "Average", "5th Percentile"]);
+  
+    // title draw
+	svg.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 0 - (margin.top / 1.20))
+				.attr("text-anchor", "middle")  
+				.style("font-size", "20px") 
+				.style("text-decoration", "bold")  
+				.text("Prosper Estimated Returns by Prosper Rating for Loans Issued between January 2011 and March 2014");
+		
+	// title draw below
+	svg.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 0 - (margin.top / 1.5))
+				.attr("text-anchor", "middle")  
+				.style("font-size", "16px") 
+				.style("text-decoration", "bold")  
+				.text("Note: Each dash represents an individual loan");
+		
+	// legend title draw
+	svg.append("text")
+				.attr("x", (width+28))             
+				.attr("y", -margin.top/4)
+				.style("font-size", "16px") 
+				.style("text-decoration", "underline")  
+				.text("Legend");
+  
+    var year_selected = "2011";
+  
+    draw(year_selected);
+    
+    function draw(year_selected) {
+
+  
+	/*d3.csv('data/prosper_clean_small.csv', function(data) {
+		 data.forEach(function(d) {
+			d.rating = d.rating;
+			d.return = +d.est_return;
+			d.year = d.year;
+            d.loss = +d.est_loss;
+         );
+	});
+    */
+  
+    var ratings = ["AA", "A", "B", "C", "D", "E", "HR"];
+
+    var data = [];                        //Initialize empty array
+      for (var i = 0; i < 300; i++) {           //Loop 25 times
+          var year = Math.floor(Math.random() * (2015 - 2011)) + 2011;
+          var rating = ratings[Math.floor(Math.random()*ratings.length)];
+
+          if (rating == "AA") {
+            var est_return = Math.round(Math.random() * 0.2 * 10000) / 10000;
+          var est_loss = Math.round(Math.random() * 0.01 * 10000) / 10000;
+          } else if (rating == "A") {
+            var est_return = Math.round(Math.random() * 0.3 * 10000) / 10000;
+          var est_loss = Math.round(Math.random() * 0.03 * 10000) / 10000;
+          } else if (rating == "B") {
+            var est_return = Math.round(Math.random() * 0.4 * 10000) / 10000;
+          var est_loss = Math.round(Math.random() * 0.05 * 10000) / 10000;
+          } else if (rating == "C") {
+            var est_return = Math.round(Math.random() * 0.5 * 10000) / 10000;
+          var est_loss = Math.round(Math.random() * 0.06 * 10000) / 10000;
+          } else if (rating == "D") {
+            var est_return = Math.round(Math.random() * 0.6 * 10000) / 10000;
+            var est_loss = Math.round(Math.random() * 0.08 * 10000) / 10000;
+          } else if (rating == "E") {
+            var est_return = Math.round(Math.random() * 0.7 * 10000) / 10000;
+            var est_loss = Math.round(Math.random() * 0.1 * 10000) / 10000;
+          } else {
+            var est_return = Math.round(Math.random() * 0.8 * 10000) / 10000;
+            var est_loss = Math.round(Math.random() * 0.15 * 10000) / 10000;
+          }
+    
+    
+    var newObj = {
+         rating: rating,
+		 year: year,
+		 est_return: est_return,
+         est_loss : est_loss};  //New random number (0-30)
+    
+  data.push(newObj);             //Add new number to array
+    };
+
+
+  data = data.map( function (d) { 
+      return { 
+        rating: d.rating,
+        year: d.year,
+        return: +d.est_return,
+        loss: +d.est_loss};
+    });
+         
+      
+    var data_filt = data.filter(function(d){ return d.year >= year_selected; });
+	var	max_value = d3.max(data, function(d) { return d.return; });	
+
+    yScale.domain([0, max_value]);
+
+		
+	// ellipses "dashes" (used to be circles so I left variable name)
+    var ellipse = svg.selectAll("ellipse")
+						 .data(data_filt);
+      
+    //alert(data.filter(function(d){ return d.year >= year_selected; }).length)
+    
+	// enter	
+	ellipse.enter()
+      .append('ellipse')
+		.attr("cx", function(d) { return xScale(d.rating); })
+		.attr("cy", function(d) { return yScale(d.return); })
+		.attr("rx", 3)
+		.attr("ry", 3)
+		.style("fill", "grey")
+		.style("fill-opacity", 0.4);
+     
+    // update 
+	ellipse.transition().duration(1000)
+              .attr("id", "main-circles")
+              .attr("cx", function(d) { return xScale(d.rating); })
+              .attr("cy", function(d) { return yScale(d.return); })
+              .attr("rx", 3)
+              .attr("ry", 3)
+              //.style("fill", "red")
+              .style("fill-opacity", 0.4);
+    // exit
+    ellipse.exit().transition().duration(10000)
+                //.attr("cx", w)
+                .remove()
+    
+    // nest for summary statistics
+    var dataNest = d3.nest()
+                          .key(function(d) { return d.rating; }).sortKeys(function(a,b) { return rating_order.indexOf(a) - rating_order.indexOf(b); })
+                          .rollup(function(leaves) { 
+                              return {
+                                  "avg_return" : d3.mean(leaves, function(d) {return d.return; }),
+                                  "5th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.05),
+                                  "95th-percentile" : d3.quantile(leaves.map(function(d) { return d.return;}).sort(d3.ascending),.95),
+                                  "sample_size": leaves.length,
+                                  "avg_loss" : d3.mean(leaves, function(d) {return d.loss; }) 
+                                  }
+                          })
+                          .entries(data_filt);  
+      
+    // line definition to display summary statistics
+	var meanline = d3.svg.line()
+                     .x(function(d) { return xScale(d.key); })
+                     .y(function(d) { return yScale(d.values.avg_return); });	
+		
+	var topline = d3.svg.line()
+                    .x(function(d) { return xScale(d.key); })
+                    .y(function(d) { return yScale(d.values['95th-percentile']); });
+		
+	var bottomline = d3.svg.line()
+                       .x(function(d) { return xScale(d.key); })
+                       .y(function(d) { return yScale(d.values['5th-percentile']); });	  
+	
+   	// MEAN LINE //
+    var statlinemean = svg.selectAll("#mean")
+						.data(dataNest);
+
+    // mean line enter
+    statlinemean.enter()
+                .append("path")
+                    .attr("class", "line")
+                    .attr("id", "mean")
+                    .attr("d", meanline(dataNest))
+                    .style("stroke", "#ff7f0e");
+    // mean line update
+    statlinemean.transition().duration(100)
+                    .attr("d", meanline(dataNest))
+                    .style("stroke", "#ff7f0e"); 
+      
+    // mean line exit
+    statlinemean.exit().remove();
+    
+    // 95th PERCENTILE LINE //
+    var statlinetop = svg.selectAll("#top")
+						.data(dataNest);
+
+    // 95th line enter
+    statlinetop.enter()
+                .append("path")
+                    .attr("class", "line")
+                    .attr("id", "top")
+                    .attr("d", topline(dataNest))
+                    .style("stroke", "#1f77b4");
+    // 95th line update
+    statlinetop.transition().duration(100)
+                    .attr("d", topline(dataNest))
+                    .style("stroke", "#1f77b4"); 
+      
+    // 95th line exit
+    statlinetop.exit().remove();
+      
+    // 5th PERCENTILE LINE //
+    var statlinebottom = svg.selectAll("#bottom")
+						.data(dataNest);
+
+    // 5th line enter
+    statlinebottom.enter()
+                .append("path")
+                    .attr("class", "line")
+                    .attr("id", "bottom")
+                    .attr("d", bottomline(dataNest))
+                    .style("stroke", "#d62728");
+    // 5th line update
+    statlinebottom.transition().duration(100)
+                    .attr("d", bottomline(dataNest))
+                    .style("stroke", "#d62728"); 
+      
+    // 5th line exit
+    statlinebottom.exit().remove();
+      
+    // SUMMARY POINTS //  
+    var points = svg.selectAll("#average")
+						.data(dataNest);
+    // enter mean points  
+    points.enter()
+           .append("circle")
+                .attr("id", "average")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values.avg_return); })
+				.attr("r", 6)
+				.style("fill", "#ff7f0e");
+      
+    // update mean points
+    points.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values.avg_return); })
+    
+    // exit mean points
+    points.exit().remove();
+    
+    // update selection 95th percentile points
+    var toppoints = svg.selectAll("#upper-percentile")
+						.data(dataNest);
+    // enter 95 points  
+    toppoints.enter()
+           .append("circle")
+                .attr("id", "upper-percentile")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
+				.attr("r", 6)
+				.style("fill", "#1f77b4");
+      
+    // update 95 points
+    toppoints.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
+    
+    // exit 95 points
+    toppoints.exit().remove();   
+    
+    // update selection 5th percentile points
+    var bottompoints = svg.selectAll("#lower-percentile")
+						.data(dataNest);
+    // enter 5 points  
+    bottompoints.enter()
+           .append("circle")
+                .attr("id", "lower-percentile")
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
+				.attr("r", 6)
+				.style("fill", "#d62728");
+      
+    // update 5 points
+    bottompoints.transition().duration(100)
+				.attr("cx", function(d) { return xScale(d.key); })		 
+				.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
+    
+    // exit 5 points
+    bottompoints.exit().remove(); 
+      
+    } // end of draw function
+      
+
+</script>
+  </body>
+</html>

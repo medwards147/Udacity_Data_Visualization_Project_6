@@ -71,6 +71,10 @@ Similar to the First Round of Visualization Feedback, I provided context and que
 	1. What's the difference between the loans? I'm assuming there is higher risk of default on the loans with higher estimated returns (as they would garner a higher interest rate). There isn't anything that tells me default risk.
 
 ### Final Iteration Visualization with D3.js – Incorporating Second Round of Feedback
+After my Second Round (third person) feedback session, I realized I needed to make the following changes:
+- Add an element that shows risk for each Prosper Rating. To address this change, I added radio buttons to allow the user to click between viewing estimated returns and estimated loss. The data/display updates accordingly.
+- Adjust title and label aethesics. To address this issue, I edited the title and increased font sizes for the axes.
+- Split out data showing the last 4, 3, 2, and 1 year(s). I didn't do individual years as I believe historical trends are more useful. There are radio buttons the user can click to switch between views. The data/display updates accordinlgy.
 
 
 ![Revision_3_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_rev.png)
