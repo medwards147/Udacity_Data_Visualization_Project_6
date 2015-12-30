@@ -75,8 +75,8 @@ After my Second Round (third person) feedback session, I realized I needed to ma
 - Add an element that shows risk for each Prosper Rating. To address this change, I added radio buttons to allow the user to click between viewing estimated returns and estimated loss. The data/display updates accordingly.
 - Adjust title and label aethesics. To address this issue, I edited the title and increased font sizes for the axes.
 - Split out data showing the last 4, 3, 2, and 1 year(s). I didn't do individual years as I believe historical trends are more useful. There are radio buttons the user can click to switch between views. The data/display updates accordinlgy.
-
-
+- Change the code to better address enter/update/exit transition (I removed a lot of duplicate code). I realized I was doing this poorly. I've never used javascript before this project and I'm still high on the learning curve. 
+The changes are shown in the following picture or live in `index-final.html`
 ![Revision_3_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/final_rev.png)
 
 
