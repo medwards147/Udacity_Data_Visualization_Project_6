@@ -4,7 +4,7 @@ library(ggplot2)
 library(lubridate)
 library(corrplot)
 
-setwd("C:/Users/MAX/Documents/GitHub/P6 - Data Visualization/data/")
+setwd("C:/Users/MAX/Documents/GitHub/Udacity_Data_Visualization_Project_6/data/")
 
 #### Load data ####
 data <- read.csv("prosperLoanData.csv", stringsAsFactors = FALSE)

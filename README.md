@@ -1,6 +1,5 @@
 ##Data Visualization: Prosper Loan Data
 Author: Max Edwards
-- Incorporate risk in final chart (estimated loss or default) somehow
 
 ### Project Summary
 This data visualization provides [Prosper.com loan data](https://www.google.com/url?q=https://s3.amazonaws.com/udacity-hosted-downloads/ud651/prosperLoanData.csv&sa=D&usg=AFQjCNGy13Kf5et82IoAUpLX68qW61M8DA) estimated returns by Prosper Credit Rating by month between 2011 and 2014. The programming language R was used to clean and explore the raw data file. A cleaned version of this file was used to generate the visualization using the d3.js library.
@@ -9,12 +8,12 @@ This data visualization provides [Prosper.com loan data](https://www.google.com/
 I approached the development this visualization from the perspective of a potential investor by thinking about what one would be interested in understanding prior investing in a prosper loan.  I believe the first thing an investor would look for is past performance. However, this data did not include actual past performance so I decided to plot estimated returns on the notion that they are a good indicator of past actual performance. By doing this, I am making the assumption Prosper’s algorithm or methodology to calculate their interest rates (the main variable used to derive estimated return) incorporates past performance. For the sake of this project, I believe this is a safe assumption.
 
 #### Explore the Data
-Prior to developing the visualization, I loaded the data into R to perform exploratory analysis. The dataset consisted of xxxxx rows and xxxxx  columns. I was able to quickly eliminate a lot of the columns as most of the data would not be available to a prospective investor prior to making an investment. I narrowed down the data down to the following variables:
+Prior to developing the visualization, I loaded the data into R to perform exploratory analysis. The dataset consisted of 113,937 rows and 81 columns. I was able to quickly eliminate a lot of the columns as most of the data would not be available to a prospective investor prior to making an investment. I narrowed down the data down to the following variables:
 - `ProsperRating(Alpha)`
 - `EstimatedReturn`
 - `EstimatedLoss`
 - `LoanOriginationDate`
-I decided a line chart would be most appropriate to display time-series data and decided to distinguish Prosper’s Rating for the loan by the line color. Below is an example of the notional chart I created with R ggplot2 package that I will implement in D3.js.
+I decided a line chart would be most appropriate to display time-series data and decided to distinguish Prosper’s Rating for the loan by the line color. Below is an example of the one of the exploration charts I made with R's ggplot2 package.
 ![R_plot](githublink_to_picture_file)
 After exploration, I decided to clean the data by making the following adjustments:
 - Remove any data prior to 2011. Prosper adjusted their method for estimated return calculations starting in 2011. I was unable to normalize 2009 to 2011 as I don't know exactly what they changed. Therefore the chart will show 2011 through March 2014. 
