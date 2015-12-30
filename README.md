@@ -82,5 +82,7 @@ The changes are shown in the following picture or live in `index-final.html`
 
 
 ### References
-1.	http://alignedleft.com/tutorials/d3
-2.	http://stackoverflow.com
+1.	[AlignedLeft - Scott Murray](http://alignedleft.com/tutorials/d3)
+2.	[Stackoverflow](http://stackoverflow.com)
+3.  [Mike Bostock d3](https://github.com/mbostock/d3/)
+4.  http://bl.ocks.org/
