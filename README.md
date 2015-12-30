@@ -19,7 +19,7 @@ I decided a line chart would be most appropriate to display time-series data and
 
 After exploration, I decided to clean the data by making the following adjustments:
 - Remove any data prior to 2011. I investigated why 2009 and 2010 looked slightly different in terms of their estimated returns. It turns out Prosper adjusted their method for estimated return calculations starting in 2011. I was unable to normalize 2009 to 2011 as I don't know exactly what they changed. Therefore the chart will show 2011 through March 2014. 
-- Change `LoanOriginationDate` into a `year` and `month`. Later, I removed `month as I only needed `year` after making adjustments to my visualization.
+- Change `LoanOriginationDate` into a `year` and `month`. Later, I removed `month` as I only needed `year` after making adjustments to my visualization.
 
 #### Create Visualization with D3.js
 Leveraging the plot I created in R, I was able to create the first iteration of my plot with d3.js shown below. The code for this plot is provided in `index_rev1.html`. I decided to use color to distinguish each Prosper Rating and to summarizie loans by month into circles for the estimated return. I also made it so you could click the legend to toggle display of the line in order control which ratings you want to compare. I also added tooltips to display other useful information on the circles.
@@ -51,6 +51,7 @@ Note: my wife's feedback is a little more useful after her answer (#2).
 
 #### Next Iteration Visualization with D3.js – Incorporating First Round of Feedback
 I quickly realized that my graphic doesn't really help a potential investor after reading the feedback I received. The main issue is that each rating only shows average returns, which of course are higher for the higher risk ratings. That is because given a large enough sample size, estimated average returns should be higher for the higher risk loans by definition (Note: actual returns may be different over a given period). Given the feedback and this realization, I decided to change my approach by creating a graphic that does a better job at showing the variation. The following picture provides my new plot with a Prosper Rating ordinal scale instead of a time series scale. Estimated returns are now shown for each individual loan (represented by the dashes) and summary statitics (5th percentile, 95th percentile, and mean) are shown by the larger colored circles and connected by lines (safe to do because the ratings are ordinal). I thought about adding descriptions for each rating (per my wife's feedback) but I decided against it as a potential user would already have this background information.
+
 ![Revision_2_plot](https://github.com/medwards147/Udacity_Data_Visualization_Project_6/blob/master/plots/rev2_ordinal_screenshot.png)
 
 #### Second Round of Visualization Feedback 
