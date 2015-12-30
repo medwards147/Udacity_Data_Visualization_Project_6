@@ -204,7 +204,15 @@
          );
 	});
     */
-  
+    d3.csv("data/prosper_clean_small.csv", function(data) {
+		data = data.map(function(d) {
+			return {  
+			rating: d.rating,
+			year: d.year,
+			return: +d.est_return,
+			loss: +d.est_loss}
+			}), drawgeoms});
+	});
     var ratings = ["AA", "A", "B", "C", "D", "E", "HR"];
 
     var data = [];                        //Initialize empty array
