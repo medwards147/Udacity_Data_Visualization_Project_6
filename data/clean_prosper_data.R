@@ -46,7 +46,8 @@ prosper_clean <- subset(prosper_clean, year > 2010)
 prosper_clean <-subset(prosper_clean, select=c(est_loss, 
                                                est_return, 
                                                rating, 
-                                               year))
+                                               year,
+                                               date))
 
 #### Write out data file ####
 write.csv(prosper_clean, file = paste0(getwd(), "/prosper_clean.csv"), row.names=FALSE)

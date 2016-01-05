@@ -194,7 +194,7 @@
 				//	  .duration(300)    
 				//	});
 		
-			debugger;	
+				
 		var tooltipDateFormat = d3.time.format("%b-%Y");
 		
 		var	sample_max = d3.max(dataNest, function(datum) {
@@ -322,12 +322,12 @@
 <body>
 <script type="text/javascript">
 	var parseDate = d3.time.format("%Y-%m-%d").parse;
-	var monthYearNameFormat = d3.time.format("%m-%Y")
+	var monthYearNameFormat = d3.time.format("%m-%Y");
 	var parseDate2 = d3.time.format("%m-%Y").parse;
 	
 	// Sorting by date function
 	function sortByDateAscending(a, b) {
-		// Dates will be cast to numbers automagically:
+		// Dates will be cast to numbers automatically:
 		return a.date - b.date;
 	};
 	
