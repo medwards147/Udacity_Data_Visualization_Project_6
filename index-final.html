@@ -102,11 +102,12 @@
 </div>
 <script type="text/javascript">
     
-	// initialize years for click functions
+	// initialize years variable to be used in click functions below
     var years = ["2011", "2012", "2013", "2014"]
      	
-    //setup click functions. These will run when user clicks the radio buttons
-	// function calls to draw with updated data
+    /* The below functions are called when clicking radio buttons
+	  located at the top of the graphic under the title. The functions
+	  are used to filter the data by year(s) and by estimated return or estimated loss */
     function updateEleven() {
           draw(years[0], d3.select('input[name="updateButton2"]:checked').node().value)
         };   
@@ -142,47 +143,45 @@
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // setup my initial scales
+    /* The following 3 chunks create an ordinal x-axis
+	   of the Prosper Ratings on the bottom of the graphic */
     var xScale = d3.scale.ordinal()
 						  .rangeRoundBands([0, width], 1)
 						  .domain(rating_order);
-    
-	// setup y scale range and domain
-    var yScale = d3.scale.linear()
-					      .range([height, 0])
-						  .domain([0, .2]);	
-    		
-	// add the scale and location to y-axis
+	
 	var xAxis = d3.svg.axis()
 					  .scale(xScale)
-                      .orient("bottom")
+                      .orient("bottom");
     
-
-	// add the scale and location to y-axis
+	svg.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis);
+	
+	/* The following 3 chunks create an linear y-axis
+	   based on the Estimated Return data  */
+    var yScale = d3.scale.linear()
+					      .range([height, 0])
+						  .domain([0, .2]);
+						  
+	
 	var yAxis = d3.svg.axis()
                       .scale(yScale)
                       .orient("left")
                       .tickFormat(d3.format("%"));
-  
-    // append the x axis to the svg
-	svg.append("g")
-			.attr("class", "x axis")
-			.attr("transform", "translate(0," + height + ")")
-			.call(xAxis)
 	
-	// append the y axis to the svg
-		svg.append("g")
+	svg.append("g")
 			.attr("class", "y axis")
 			.call(yAxis);
 		  
-	// x-label append
+	// This adds the text below the X-axis
 	svg.append("text")
 		  .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom/1.5) + ")")
 		  .style("text-anchor", "middle")
 		  .style("font-size", "16px") 
 		  .text("(<--Less Risk) Prosper Credit Rating (More Risk-->)");
 	  
-	// y-label append
+	// This adds the text to the left of the Y-axis
 	svg.append("text")
 			.attr("transform", "rotate(-90)")
 			.attr("y", 0 - margin.left)
@@ -192,12 +191,12 @@
 			.style("font-size", "16px") 
 			.text("Prosper Estimated Return/Loss");
   
-	// add color scale for 95th, mean, and 5th percentile statistics
+	// Add color scale for 95th, mean, and 5th percentile statistics
   	var color = d3.scale.ordinal()
 						.range(["#1f77b4", "#ff7f0e", "#d62728"])
 						.domain(["95th Percentile", "Average", "5th Percentile"]);
   
-    // title draw
+    // Title draw at top-middle of the graphic
 	svg.append("text")
 				.attr("x", (width / 2))             
 				.attr("y", 0 - (margin.top / 1.20))
@@ -215,7 +214,7 @@
 				.style("text-decoration", "bold")  
 				.text("Note: Each dash represents an individual loan");
 		
-	// legend title draw
+	// This adds the text for the legend Title
 	svg.append("text")
 				.attr("x", (width+28))             
 				.attr("y", -margin.top/4)
@@ -223,13 +222,16 @@
 				.style("text-decoration", "underline")  
 				.text("Legend");
     
-	// this is to filter the data based on the year
-	// used in draw function filter
+	// This is to filter the data based on the year
+	// It is used in draw function filter
     var year_selected = "2011";
 	
 	// call draw function
     draw(year_selected);
     
+	/* This function imports the data and appends it to 
+	   elements to render the visualization. It also
+	   handles updates and exiting existing data */
     function draw(year_selected, measurement) {
 		// reload the data based on what measurement is selected
 		d3.csv('data/prosper_clean.csv', function(data) {
@@ -251,7 +253,7 @@
 			  
 			// enter the data
 			ellipse.enter()
-			  .append('ellipse')
+			  .append('ellipse');
 			 
 			// update already existing
 			ellipse.transition().duration(10)
@@ -264,10 +266,10 @@
 					  .style("fill-opacity", 0.4);
 			
 			// exit the data no longer bound
-			ellipse.exit().transition().attr("opacity", 0).remove()
+			ellipse.exit().transition().attr("opacity", 0).remove();
 			
-			// nest for summary statistics
-			// this uses rating as a key and creates statistics as values
+			// Nest for summary statistics
+			// This uses rating as a key and creates statistics as values
 			var dataNest = d3.nest()
 								  .key(function(d) { return d.rating; }).sortKeys(function(a,b) { return rating_order.indexOf(a) - rating_order.indexOf(b); })
 								  .rollup(function(leaves) { 
@@ -281,26 +283,28 @@
 								  })
 								  .entries(data_filt);  
 			  
-			// line definition to display summary statistics
+			/* The following 3 code chunks create the variable defitions for the mean, 
+			   95th and 5th percentile lines to be used to assign data to "d" attributes
+               of each path   */
 			var meanline = d3.svg.line()
 							 .x(function(d) { return xScale(d.key); })
 							 .y(function(d) { return yScale(d.values.avg_return); });	
 			
-			// add the mean line using the xScale on the rating (key) and yScale on 95th percentile (values)
+			
 			var topline = d3.svg.line()
 							.x(function(d) { return xScale(d.key); })
 							.y(function(d) { return yScale(d.values['95th-percentile']); });
 			
-			// add the mean line using the xScale on the rating (key) and yScale on 5th percentile (values)	
+				
 			var bottomline = d3.svg.line()
 							   .x(function(d) { return xScale(d.key); })
 							   .y(function(d) { return yScale(d.values['5th-percentile']); });	  
 			
-			// MEAN LINE select and load nested data
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the mean line
 			var statlinemean = svg.selectAll("#mean")
 								.data(dataNest);
 
-			// mean line enter
 			statlinemean.enter()
 						.append("path")
 							.attr("class", "line")
@@ -308,19 +312,17 @@
 							.attr("d", meanline(dataNest))
 							.style("stroke", "#ff7f0e");
 							
-			// mean line update already existing data
 			statlinemean.transition().duration(100)
 							.attr("d", meanline(dataNest))
 							.style("stroke", "#ff7f0e"); 
 			  
-			// mean line exit data not attached to anything
 			statlinemean.exit().remove();
 			
-			// 95th PERCENTILE LINE //
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the 95th percentile line
 			var statlinetop = svg.selectAll("#top")
 								.data(dataNest);
 
-			// 95th line enter
 			statlinetop.enter()
 						.append("path")
 							.attr("class", "line")
@@ -328,19 +330,17 @@
 							.attr("d", topline(dataNest))
 							.style("stroke", "#1f77b4");
 							
-			// 95th line update
 			statlinetop.transition().duration(100)
 							.attr("d", topline(dataNest))
 							.style("stroke", "#1f77b4"); 
 			  
-			// 95th line exit
 			statlinetop.exit().remove();
 			  
-			// 5th PERCENTILE LINE //
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the 5th percentile line
 			var statlinebottom = svg.selectAll("#bottom")
 								.data(dataNest);
 
-			// 5th line enter
 			statlinebottom.enter()
 						.append("path")
 							.attr("class", "line")
@@ -348,73 +348,65 @@
 							.attr("d", bottomline(dataNest))
 							.style("stroke", "#d62728");
 							
-			// 5th line update
 			statlinebottom.transition().duration(100)
 							.attr("d", bottomline(dataNest))
 							.style("stroke", "#d62728"); 
 			  
-			// 5th line exit
 			statlinebottom.exit().remove();
 			  
-			// SUMMARY POINTS //  
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the mean circles (shown on the lines)  
 			var points = svg.selectAll("#average")
 								.data(dataNest);
-			// enter mean points  
 			points.enter()
 				   .append("circle")
-						.attr("id", "average")
+				   .attr("id", "average");
 			  
-			// update mean points
 			points.transition().duration(100)
 						.attr("cx", function(d) { return xScale(d.key); })		 
 						.attr("cy", function(d) { return yScale(d.values.avg_return); })
 						.attr("r", 6)
 						.style("fill", "#ff7f0e");
 						
-			// exit mean points
 			points.exit().remove();
 			
-			// update selection 95th percentile points
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the 95th percentile circles (shown on the lines)
 			var toppoints = svg.selectAll("#upper-percentile")
 								.data(dataNest);
-			// enter 95 points  
 			toppoints.enter()
 				   .append("circle")
-						.attr("id", "upper-percentile")
+				   .attr("id", "upper-percentile");
 
-			// update 95 points
 			toppoints.transition().duration(100)
 						.attr("cx", function(d) { return xScale(d.key); })		 
 						.attr("cy", function(d) { return yScale(d.values['95th-percentile']); })
 						.attr("r", 6)
 						.style("fill", "#1f77b4");
 			
-			// exit 95 points
 			toppoints.exit().remove();   
 			
-			// update selection 5th percentile points
+			// The following 4 code chunks create the enter/update/exit pipeline
+			// for the mean circles (shown on the lines)
 			var bottompoints = svg.selectAll("#lower-percentile")
 								.data(dataNest);
-			// enter 5 points  
 			bottompoints.enter()
 				   .append("circle")
-						.attr("id", "lower-percentile")
+				   .attr("id", "lower-percentile");
 			  
-			// update 5 points
 			bottompoints.transition().duration(100)
 						.attr("cx", function(d) { return xScale(d.key); })		 
 						.attr("cy", function(d) { return yScale(d.values['5th-percentile']); })
 						.attr("r", 6)
 						.style("fill", "#d62728");
 						
-			// exit 5 points
 			bottompoints.exit().remove();
 		
 			// legend variables for spacing
 			var legendRectSize = 25;
 			var legendSpacing = 7;
 			
-			//append the legend using the color domain as the data (to match the lines)
+			// append the legend using the color domain as the data (to match the lines)
 			var legend = svg.selectAll(".legend")
 			   .data(color.domain())
 			   .enter()
